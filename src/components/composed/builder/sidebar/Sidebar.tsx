@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useCurrentSlide, useSlides } from "@/store/useSloid"
 import { PlusCircledIcon } from "@radix-ui/react-icons"
 import { textSlide } from "@/lib/Sloid"
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import { SloidTextNode } from "@/types/SloidNode"
 import { usePrevious } from "@uidotdev/usehooks"
 
@@ -13,13 +13,17 @@ const Sidebar = () => {
   const { getAllSlides, add, remove } = useSlides()
   const { currentSlide, increment, decrement, set } = useCurrentSlide()
   const previous = usePrevious(getAllSlides().length)
+  const addButton = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (previous < getAllSlides().length) set(getAllSlides().length - 1)
+    if (previous < getAllSlides().length) {
+      set(getAllSlides().length - 1)
+      addButton.current?.scrollIntoView({ behavior: "smooth" })
+    }
   }, [getAllSlides().length])
 
   return (
-    <ScrollArea type="scroll" className="w-full h-full relative">
+    <ScrollArea type="scroll" className="w-full h-full relative bg-muted">
       <div
         className="space-y-3 px-3 py-4 z-10 backdrop-blur-md focus-visible:outline-none"
         tabIndex={1}
@@ -40,7 +44,7 @@ const Sidebar = () => {
             />
           )
         })}
-        <div className="flex gap-2 w-full">
+        <div className="flex gap-2 w-full" ref={addButton}>
           <div className="flex flex-col items-center justify-center w-4"></div>
           <button
             onClick={() => {
@@ -65,7 +69,7 @@ const Sidebar = () => {
         priority
         fill
         placeholder="blur"
-        className="opacity-10 pointer-events-none -z-10 object-cover"
+        className="opacity-0 pointer-events-none -z-10 object-cover"
       />
     </ScrollArea>
   )

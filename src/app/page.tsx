@@ -14,7 +14,7 @@ export default function Home() {
       <ResizablePanel defaultSize={15} minSize={15} maxSize={20}>
         <Sidebar />
       </ResizablePanel>
-      <ResizableHandle className="w-0" />
+      <ResizableHandle className="" />
       <ResizablePanel defaultSize={85}>
         <Editor />
       </ResizablePanel>

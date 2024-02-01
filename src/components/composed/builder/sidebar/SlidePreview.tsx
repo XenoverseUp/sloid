@@ -13,7 +13,7 @@ const SlidePreview = ({
   const { set } = useCurrentSlide()
 
   return (
-    <div onClick={() => set(index)} className="flex gap-2 w-full">
+    <div className="flex gap-2 w-full">
       <div className="flex flex-col items-center justify-center w-4">
         <p
           className={cn(
@@ -26,16 +26,17 @@ const SlidePreview = ({
           {index + 1}
         </p>
       </div>
-      <div
+      <button
+        onClick={() => set(index)}
         className={cn(
-          "flex-grow aspect-video rounded-md border bg-white text-zinc-900 grid place-items-center",
+          "flex-grow cursor-auto ring-lime-200 outline-none aspect-video rounded-md border bg-white text-zinc-900 grid place-items-center",
           {
             "ring-4": selected,
           }
         )}
       >
         {text}
-      </div>
+      </button>
     </div>
   )
 }
