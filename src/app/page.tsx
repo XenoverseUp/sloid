@@ -1,6 +1,6 @@
 "use client"
 
-import Editor from "@/components/composed/builder/editor/Editor"
+import Stage from "@/components/composed/builder/editor/Stage"
 import Sidebar from "@/components/composed/builder/sidebar/Sidebar"
 import {
   ResizableHandle,
@@ -16,7 +16,7 @@ export default function Home() {
       </ResizablePanel>
       <ResizableHandle className="" />
       <ResizablePanel defaultSize={85}>
-        <Editor />
+        <Stage />
       </ResizablePanel>
     </ResizablePanelGroup>
   )

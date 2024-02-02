@@ -50,14 +50,14 @@ const Sidebar = () => {
             onClick={() => {
               add(textSlide("Slide " + getAllSlides().length.toString()))
             }}
-            className="group gap-1 bg-white/30 transition-colors hover:border-slate-400 flex-grow aspect-video rounded-md border border-slate-300 border-dashed text-zinc-900 flex flex-col justify-center items-center"
+            className="group gap-1 bg-white/30 duration-300 transition-colors hover:border-slate-400 flex-grow aspect-video rounded-md border border-slate-300 border-dashed text-zinc-900 flex flex-col justify-center items-center"
           >
             <PlusCircledIcon
               width={30}
               height={30}
-              className="opacity-30 fill-border rotate-90 scale-95 group-hover:scale-100 group-hover:opacity-60 group-hover:rotate-0 transition-[opacity,transform]"
+              className="opacity-30 duration-300 fill-border rotate-90 scale-95 group-hover:scale-100 group-hover:opacity-60 group-hover:rotate-0 transition-[opacity,transform]"
             />
-            <span className="text-xs scale-75 transition-all delay-0 group-hover:delay-500 opacity-0 h-0 overflow-hidden group-hover:opacity-50 group-hover:h-4 group-hover:scale-100">
+            <span className="text-xs scale-75 transition-all delay-0 group-hover:delay-1000 opacity-0 h-0 overflow-hidden group-hover:opacity-50 group-hover:h-4 group-hover:scale-100">
               Add Slide
             </span>
           </button>
