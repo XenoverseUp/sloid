@@ -1,15 +1,9 @@
-import EditorTool from "@/lib/EditorTool"
 import { cn, getPixelRatio } from "@/lib/utils"
+import { CanvasTool } from "@/types/Canvas"
 import { useList, useMouse } from "@uidotdev/usehooks"
 import { useCallback, useEffect, useRef, useState } from "react"
 
-type EditorProps = {
-  tool: EditorTool
-}
-
-const resolution = 1024
-
-const Editor = ({ tool }: EditorProps) => {
+const Editor = ({ tool }: { tool: CanvasTool }) => {
   const ref = useRef<HTMLCanvasElement>(null)
   const parent = useRef<HTMLDivElement>(null)
   const [mouse] = useMouse()
@@ -90,10 +84,11 @@ const Editor = ({ tool }: EditorProps) => {
     }
   }, [mouse])
 
-  const click = useCallback(() => {
-    stageData.current.push([x as number, y as number])
-    console.log(stageData)
-  }, [mouse])
+  const onPointerDown = useCallback(() => {}, [mouse])
+
+  const onPointerMove = useCallback(() => {}, [mouse])
+
+  const onPointerUp = useCallback(() => {}, [mouse])
 
   return (
     <div
@@ -101,14 +96,18 @@ const Editor = ({ tool }: EditorProps) => {
       className={cn(
         "w-4/5 max-w-screen-lg bg-white rounded aspect-video border overflow-hidden flex items-center justify-center text-4xl",
         {
-          "cursor-none": tool == EditorTool.Stamp,
+          "cursor-none": tool == CanvasTool.Stamp,
         }
       )}
     >
       <canvas
         tabIndex={1}
         ref={ref}
-        onMouseDown={click}
+        {...{
+          onPointerDown,
+          onPointerMove,
+          onPointerUp,
+        }}
         className="w-full h-full"
       />
     </div>

@@ -1,21 +1,23 @@
 import Editor from "@/components/composed/builder/editor/Editor"
 import PropertyPanel from "@/components/composed/builder/editor/PropertyPanel"
-import ToolPicker from "@/components/composed/builder/editor/ToolPicker"
-import EditorTool from "@/lib/EditorTool"
+import Toolbar from "@/components/composed/builder/editor/toolbar/Toolbar"
+import useCanvasState from "@/hooks/useCanvasState"
+import { CanvasTool, CanvasState } from "@/types/Canvas"
 import { useState } from "react"
 
 function Stage() {
-  const [tool, setTool] = useState<EditorTool>(EditorTool.Cursor)
-  const [toolProps, setToolProps] = useState()
+  const { canvasState, setCanvasTool, setCanvasMode } = useCanvasState()
 
   return (
     <div className="w-full h-full flex bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
       <main className="flex-grow h-full flex items-center justify-center relative">
-        <ToolPicker
+        <Toolbar
           className="absolute top-1/2 -translate-y-1/2 left-3"
-          {...{ tool, setTool }}
+          tool={canvasState.tool}
+          setTool={setCanvasTool}
+          setMode={setCanvasMode}
         />
-        <Editor {...{ tool }} />
+        <Editor {...{ tool: canvasState.tool }} />
       </main>
       <PropertyPanel />
     </div>
