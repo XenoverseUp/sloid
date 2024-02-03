@@ -2,11 +2,23 @@ import Editor from "@/components/composed/builder/editor/Editor"
 import PropertyPanel from "@/components/composed/builder/editor/PropertyPanel"
 import Toolbar from "@/components/composed/builder/editor/toolbar/Toolbar"
 import useCanvasState from "@/hooks/useCanvasState"
+import useToolProperties from "@/hooks/useToolProperties"
 import { CanvasTool, CanvasState } from "@/types/Canvas"
 import { useState } from "react"
 
 function Stage() {
-  const { canvasState, setCanvasTool, setCanvasMode } = useCanvasState()
+  const {
+    canvasState,
+    setCanvasTool,
+    setCanvasMode,
+    setCurrentPosition,
+    setDragEnd,
+    setDragStart,
+    setPressed,
+    setReleased,
+    clearCanvasMode,
+  } = useCanvasState()
+  const a = useToolProperties()
 
   return (
     <div className="w-full h-full flex bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
@@ -17,9 +29,20 @@ function Stage() {
           setTool={setCanvasTool}
           setMode={setCanvasMode}
         />
-        <Editor {...{ tool: canvasState.tool }} />
+        <Editor
+          {...{
+            canvasState,
+            setCanvasMode,
+            setCurrentPosition,
+            setDragEnd,
+            setDragStart,
+            setPressed,
+            setReleased,
+            clearCanvasMode,
+          }}
+        />
       </main>
-      <PropertyPanel />
+      <PropertyPanel tool={canvasState.tool} />
     </div>
   )
 }

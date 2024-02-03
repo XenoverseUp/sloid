@@ -43,6 +43,7 @@ const picker: Array<Tool> = [
     title: "Text",
     description: "Creates a text on the slide.",
     type: CanvasTool.Text,
+    initialMode: CanvasMode.Inserting,
     icon: FontStyleIcon,
     shortcut: "1",
   },
@@ -50,6 +51,7 @@ const picker: Array<Tool> = [
     title: "Round",
     description: "Draws a circle on the slide.",
     type: CanvasTool.Round,
+    initialMode: CanvasMode.Inserting,
     icon: ShadowInnerIcon,
     shortcut: "2",
   },
@@ -57,6 +59,7 @@ const picker: Array<Tool> = [
     title: "Square",
     description: "Draws a rectangle on the slide.",
     type: CanvasTool.Square,
+    initialMode: CanvasMode.Inserting,
     icon: SquareIcon,
     shortcut: "3",
   },
@@ -86,6 +89,7 @@ const picker: Array<Tool> = [
     title: "Stamp",
     description: "Puts a stamp onto the slide.",
     type: CanvasTool.Stamp,
+    initialMode: CanvasMode.Inserting,
     icon: TargetIcon,
     shortcut: "7",
   },
@@ -102,7 +106,8 @@ const Toolbar = ({ tool, setTool, setMode, className }: ToolPickerProps) => {
       {picker.map((data) => (
         <ToolButton
           key={`item-${data.title}`}
-          {...{ tool, setTool, setMode, ...data }}
+          setMode={() => (data.initialMode ? setMode(data.initialMode) : null)}
+          {...{ tool, setTool, ...data }}
         />
       ))}
     </div>

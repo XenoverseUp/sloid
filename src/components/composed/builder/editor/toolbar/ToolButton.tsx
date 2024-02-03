@@ -29,13 +29,14 @@ const ToolButton = ({
 }: Tool & {
   tool: CanvasTool
   setTool: (tool: CanvasTool) => void
-  setMode: (tool: CanvasMode) => void
+  setMode: () => void
 }) => {
   return (
     <HoverCard openDelay={3000}>
       <button
         onClick={() => {
           setTool(type)
+          setMode()
         }}
         className={cn(
           "w-8 h-8 rounded-[0.5rem] grid place-items-center border border-dashed border-transparent transition-colors hover:bg-white/10 ga",
