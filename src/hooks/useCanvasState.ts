@@ -7,6 +7,9 @@ const useCanvasState = (
     tool: CanvasTool.Cursor,
     pressed: false,
     released: true,
+    current: { x: -999, y: -999 } as Point,
+    dragEnd: { x: -999, y: -999 } as Point,
+    dragStart: { x: -999, y: -999 } as Point,
   }
 ) => {
   const [state, setState] = useState<CanvasState>(initialState)

@@ -39,7 +39,6 @@ const Editor = ({
   const [mouse] = useMouse()
   const [x, setX] = useState<number>(-999)
   const [y, setY] = useState<number>(-999)
-  const stageData = useRef<Array<Array<number>>>([]) // useList
 
   useEffect(() => {
     let requestId: number | null = null
