@@ -19,6 +19,7 @@ function Stage() {
     setReleased,
     clearCanvasMode,
   } = useCanvasState()
+
   const a = useToolProperties()
 
   return (

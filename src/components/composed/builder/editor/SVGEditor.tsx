@@ -1,11 +1,23 @@
 import { Case, Switch, When } from "react-if"
 import { cn } from "@/lib/utils"
-import { CanvasMode, CanvasState, CanvasTool, Point } from "@/types/Canvas"
+import {
+  CanvasMode,
+  CanvasState,
+  CanvasTool,
+  Element,
+  Layer,
+  Point,
+  Rectangle,
+} from "@/types/Canvas"
 import { useMap, useMouse } from "@uidotdev/usehooks"
 import { useCallback, useEffect, useRef, useState } from "react"
-import rect from "@/components/composed/builder/editor/element/rect"
+import Rect from "@/components/composed/builder/editor/element/rect"
 import circle from "@/components/composed/builder/editor/element/circle"
 import useModifierKeys from "@/hooks/useModifierKeys"
+import useFrame from "@/hooks/useFrame"
+import { v4 as uuid } from "uuid"
+import render from "@/components/composed/builder/editor/element/render"
+import { UUID } from "crypto"
 
 const resolution = 1024
 const WIDTH = resolution
@@ -37,6 +49,7 @@ export default function SVGEditor({
   const [mouseX, setMouseX] = useState<number>(-999)
   const [mouseY, setMouseY] = useState<number>(-999)
   const modifierKeys = useModifierKeys()
+  const { getMaxIndex, getLayerElements, addElement, getLayers } = useFrame()
 
   useEffect(() => {
     const rect: DOMRect = (
@@ -58,10 +71,40 @@ export default function SVGEditor({
   }, [mouse])
 
   const onPointerUp = useCallback(() => {
+    if (canvasState.released) return
+
+    setDragEnd({ x: canvasState.current.x, y: canvasState.current.y } as Point)
+    canvasState.dragEnd = canvasState.current
+
+    if (canvasState.mode == CanvasMode.Inserting) {
+      switch (canvasState.tool) {
+        case CanvasTool.Square: {
+          const r: Rectangle = {
+            type: "rectangle",
+            id: uuid() as UUID,
+            x: Math.min(canvasState.dragStart.x, canvasState.dragEnd.x),
+            y: Math.min(canvasState.dragStart.y, canvasState.dragEnd.y),
+            width: Math.abs(canvasState.dragStart.x - canvasState.dragEnd.x),
+            height: Math.abs(canvasState.dragStart.y - canvasState.dragEnd.y),
+            style: {
+              fill: "#ff0000",
+              stroke: 2,
+              strokeColor: "#00ff00",
+              strokeStyle: "dashed",
+            },
+          }
+
+          addElement(r)
+        }
+      }
+    }
+
     setReleased()
-    setDragEnd({ x: mouseX, y: mouseY } as Point)
-    // Add to frame
   }, [mouse])
+
+  const onPointerLeave = () => {
+    setReleased()
+  }
 
   return (
     <div
@@ -78,56 +121,27 @@ export default function SVGEditor({
           onPointerDown,
           onPointerMove,
           onPointerUp,
-          onPointerLeave: onPointerUp,
+          onPointerLeave,
         }}
       >
+        {getLayerElements(0)!.map((element: Element) => render(element))}
         <When condition={canvasState.pressed}>
           <Switch>
             <Case condition={canvasState.mode == CanvasMode.Inserting}>
               <Switch>
                 <Case condition={canvasState.tool == CanvasTool.Square}>
-                  <Switch>
-                    <Case
-                      condition={!modifierKeys.shiftKey && !modifierKeys.altKey}
-                    >
-                      {rect({
-                        square: false,
-                        mirror: false,
-                        x: Math.min(
-                          canvasState.dragStart.x,
-                          canvasState.current.x
-                        ),
-                        y: Math.min(
-                          canvasState.dragStart.y,
-                          canvasState.current.y
-                        ),
-                        width: Math.abs(
-                          canvasState.dragStart.x - canvasState.current.x
-                        ),
-                        height: Math.abs(
-                          canvasState.dragStart.y - canvasState.current.y
-                        ),
-                        className: "stroke-lime-500 stroke-2",
-                      })}
-                    </Case>
-                    <Case
-                      condition={!modifierKeys.shiftKey && modifierKeys.altKey}
-                    >
-                      {rect({
-                        square: false,
-                        mirror: true,
-                        x: canvasState.dragStart.x,
-                        y: canvasState.dragStart.y,
-                        radiusX: Math.abs(
-                          canvasState.dragStart.x - canvasState.current.x
-                        ),
-                        radiusY: Math.abs(
-                          canvasState.dragStart.y - canvasState.current.y
-                        ),
-                        className: "stroke-lime-500 stroke-2",
-                      })}
-                    </Case>
-                  </Switch>
+                  <Rect
+                    x={Math.min(canvasState.dragStart.x, canvasState.current.x)}
+                    y={Math.min(canvasState.dragStart.y, canvasState.current.y)}
+                    width={Math.abs(
+                      canvasState.dragStart.x - canvasState.current.x
+                    )}
+                    height={Math.abs(
+                      canvasState.dragStart.y - canvasState.current.y
+                    )}
+                    className="stroke-lime-500 stroke-2"
+                    id="0000-0000-0000-0000-0000"
+                  />
                 </Case>
                 <Case condition={canvasState.tool == CanvasTool.Round}>
                   {circle({
