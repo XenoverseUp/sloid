@@ -2,31 +2,42 @@
 
 import { HueSlider } from "@/components/ui/hue-slider"
 import { OpacitySlider } from "@/components/ui/opacity-slider"
-import { cn } from "@/lib/utils"
+import { cn, rgb2hsl } from "@/lib/utils"
 import { Color, Point } from "@/types/Canvas"
 import { AngleIcon, ShadowInnerIcon } from "@radix-ui/react-icons"
 import { ClassValue } from "clsx"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 type ColorPaletteProps = {
   className?: ClassValue
   width?: number
   height?: number
+  value?: Color
+  onValueChange?: (newValue: Color) => void
 }
 
 const ColorPalette = ({
   className,
   width = 230,
   height = 230,
+  value,
+  onValueChange = () => {},
 }: ColorPaletteProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [color, setColor] = useState<Color>()
-  const [hue, setHue] = useState<number>(0)
+
+  const [hue, setHue] = useState<number>(180)
+  const [saturation, setSaturation] = useState<number>(0)
+  const [lightness, setLightness] = useState<number>(100)
   const [opacity, setOpacity] = useState<number>(100)
   const [canvasPointer, setCanvasPointer] = useState<Point>({
     x: 0,
     y: 0,
   } as Point)
+
+  const color = useMemo<Color>(
+    () => `hsl(${hue}, ${saturation}%, ${lightness}%)`,
+    [hue, saturation, lightness]
+  )
 
   useEffect(() => {
     const canvas = canvasRef.current as HTMLCanvasElement
@@ -49,18 +60,6 @@ const ColorPalette = ({
     context.fillStyle = darkGradient
     context.fillRect(0, 0, width, height)
 
-    const imageData = context.getImageData(0, 0, canvas.width, canvas.height)
-    const pixelX = Math.floor(canvasPointer.x * canvas.width)
-    const pixelY = Math.floor(canvasPointer.y * canvas.height)
-    const pixelIndex = (pixelY * canvas.width + pixelX) * 4
-    const pixelColor = {
-      r: imageData.data[pixelIndex],
-      g: imageData.data[pixelIndex + 1],
-      b: imageData.data[pixelIndex + 2],
-    }
-
-    setColor(`rgb(${pixelColor.r}, ${pixelColor.g}, ${pixelColor.b})`)
-
     const handleCanvasClick = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect()
 
@@ -71,19 +70,25 @@ const ColorPalette = ({
       const pixelX = Math.floor(xPercentage * canvas.width)
       const pixelY = Math.floor(yPercentage * canvas.height)
       const pixelIndex = (pixelY * canvas.width + pixelX) * 4
-      const pixelColor = {
-        r: imageData.data[pixelIndex],
-        g: imageData.data[pixelIndex + 1],
-        b: imageData.data[pixelIndex + 2],
-      }
+
+      const [h, s, l] = rgb2hsl(
+        imageData.data[pixelIndex],
+        imageData.data[pixelIndex + 1],
+        imageData.data[pixelIndex + 2]
+      )
+
+      setHue(h)
+      setSaturation(s)
+      setLightness(l)
 
       setCanvasPointer({ x: xPercentage * 100, y: yPercentage * 100 } as Point)
-      setColor(`rgb(${pixelColor.r}, ${pixelColor.g}, ${pixelColor.b})`)
     }
 
     canvas.addEventListener("click", handleCanvasClick)
 
-    return () => canvas.removeEventListener("click", handleCanvasClick)
+    return () => {
+      canvas.removeEventListener("click", handleCanvasClick)
+    }
   }, [hue])
 
   return (
@@ -95,7 +100,7 @@ const ColorPalette = ({
             top: `calc(${canvasPointer.y}% - 8px)`,
             background: color,
           }}
-          className="w-4 h-4 bg-transparent border-2 rounded-full border-white absolute"
+          className="w-4 h-4 bg-transparent border-2 rounded-full border-white ring-1 ring-border absolute"
         ></span>
         <canvas ref={canvasRef} width={width} height={height}></canvas>
       </div>

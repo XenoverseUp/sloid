@@ -1,5 +1,5 @@
 import Editor from "@/components/composed/builder/editor/LegacyCanvasEditor"
-import PropertyPanel from "@/components/composed/builder/editor/PropertyPanel"
+import PropertyPanel from "@/components/composed/builder/editor/property-panel/PropertyPanel"
 import SVGEditor from "@/components/composed/builder/editor/SVGEditor"
 import Toolbar from "@/components/composed/builder/editor/toolbar/Toolbar"
 import useCanvasState from "@/hooks/useCanvasState"

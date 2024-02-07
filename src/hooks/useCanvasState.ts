@@ -3,8 +3,8 @@ import { useCallback, useState } from "react"
 
 const useCanvasState = (
   initialState: CanvasState = {
-    mode: CanvasMode.None,
-    tool: CanvasTool.Cursor,
+    mode: CanvasMode.Inserting,
+    tool: CanvasTool.Square,
     pressed: false,
     released: true,
     current: { x: -999, y: -999 } as Point,
