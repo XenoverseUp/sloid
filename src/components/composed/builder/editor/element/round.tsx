@@ -1,10 +1,12 @@
 import { cn } from "@/lib/utils"
 import { ClassValue } from "clsx"
+import { UUID } from "crypto"
 
-type CircleProps = {
+type RoundProps = {
   x: number
   y: number
   className?: ClassValue
+  id: UUID
 } & (
   | {
       mirror: false
@@ -18,9 +20,9 @@ type CircleProps = {
     }
 )
 
-const circle = (params: CircleProps) => {
+const Round = (params: RoundProps) => {
   if (params.mirror) {
-    const { x, y, radiusX, radiusY, className } = params
+    const { x, y, radiusX, radiusY, className, id } = params
     return (
       <ellipse
         cx={x}
@@ -28,10 +30,11 @@ const circle = (params: CircleProps) => {
         rx={radiusX}
         ry={radiusY}
         className={cn(className)}
+        id={id}
       ></ellipse>
     )
   } else {
-    const { x, y, width, height, className } = params
+    const { x, y, width, height, className, id } = params
 
     return (
       <ellipse
@@ -40,9 +43,10 @@ const circle = (params: CircleProps) => {
         rx={width / 2}
         ry={height / 2}
         className={cn(className)}
+        id={id}
       ></ellipse>
     )
   }
 }
 
-export default circle
+export default Round

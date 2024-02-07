@@ -54,15 +54,17 @@ export interface Circle extends Element {
   type: "circle"
   cx: number
   cy: number
-  radius: number
+  radiusX: number
+  radiusY: number
   style: Style
 }
 
+type HSL = `hsl(${number}, ${number}%, ${number}%)`
 type RGB = `rgb(${number}, ${number}, ${number})`
 type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`
 type HEX = `#${string}`
 
-export type Color = RGB | RGBA | HEX
+export type Color = RGB | RGBA | HEX | HSL
 
 export type Style = {
   fill?: Color

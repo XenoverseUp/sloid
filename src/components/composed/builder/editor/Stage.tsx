@@ -1,4 +1,4 @@
-import Editor from "@/components/composed/builder/editor/Editor"
+import Editor from "@/components/composed/builder/editor/LegacyCanvasEditor"
 import PropertyPanel from "@/components/composed/builder/editor/PropertyPanel"
 import SVGEditor from "@/components/composed/builder/editor/SVGEditor"
 import Toolbar from "@/components/composed/builder/editor/toolbar/Toolbar"
@@ -31,18 +31,6 @@ function Stage() {
           setTool={setCanvasTool}
           setMode={setCanvasMode}
         />
-        {/* <Editor
-          {...{
-            canvasState,
-            setCanvasMode,
-            setCurrentPosition,
-            setDragEnd,
-            setDragStart,
-            setPressed,
-            setReleased,
-            clearCanvasMode,
-          }}
-        /> */}
         <SVGEditor
           {...{
             canvasState,

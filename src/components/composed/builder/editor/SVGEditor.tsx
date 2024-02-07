@@ -4,6 +4,7 @@ import {
   CanvasMode,
   CanvasState,
   CanvasTool,
+  Circle,
   Element,
   Layer,
   Point,
@@ -12,12 +13,13 @@ import {
 import { useMap, useMouse } from "@uidotdev/usehooks"
 import { useCallback, useEffect, useRef, useState } from "react"
 import Rect from "@/components/composed/builder/editor/element/rect"
-import circle from "@/components/composed/builder/editor/element/circle"
+import circle from "@/components/composed/builder/editor/element/round"
 import useModifierKeys from "@/hooks/useModifierKeys"
 import useFrame from "@/hooks/useFrame"
 import { v4 as uuid } from "uuid"
 import render from "@/components/composed/builder/editor/element/render"
 import { UUID } from "crypto"
+import Round from "@/components/composed/builder/editor/element/round"
 
 const resolution = 1024
 const WIDTH = resolution
@@ -79,7 +81,7 @@ export default function SVGEditor({
     if (canvasState.mode == CanvasMode.Inserting) {
       switch (canvasState.tool) {
         case CanvasTool.Square: {
-          const r: Rectangle = {
+          addElement({
             type: "rectangle",
             id: uuid() as UUID,
             x: Math.min(canvasState.dragStart.x, canvasState.dragEnd.x),
@@ -92,9 +94,29 @@ export default function SVGEditor({
               strokeColor: "#00ff00",
               strokeStyle: "dashed",
             },
-          }
+          } as Rectangle)
+          break
+        }
+        case CanvasTool.Round: {
+          const radiusX =
+            Math.abs(canvasState.dragStart.x - canvasState.current.x) / 2
+          const radiusY =
+            Math.abs(canvasState.dragStart.y - canvasState.current.y) / 2
+          const cx = canvasState.dragStart.x + radiusX
+          const cy = canvasState.dragStart.y + radiusY
 
-          addElement(r)
+          addElement({
+            type: "circle",
+            id: uuid() as UUID,
+            cx,
+            cy,
+            radiusX,
+            radiusY,
+            style: {
+              stroke: 1,
+            },
+          } as Circle)
+          break
         }
       }
     }
@@ -144,18 +166,19 @@ export default function SVGEditor({
                   />
                 </Case>
                 <Case condition={canvasState.tool == CanvasTool.Round}>
-                  {circle({
-                    mirror: false,
-                    x: Math.min(canvasState.dragStart.x, canvasState.current.x),
-                    y: Math.min(canvasState.dragStart.y, canvasState.current.y),
-                    width: Math.abs(
+                  <Round
+                    mirror={false}
+                    x={Math.min(canvasState.dragStart.x, canvasState.current.x)}
+                    y={Math.min(canvasState.dragStart.y, canvasState.current.y)}
+                    width={Math.abs(
                       canvasState.dragStart.x - canvasState.current.x
-                    ),
-                    height: Math.abs(
+                    )}
+                    height={Math.abs(
                       canvasState.dragStart.y - canvasState.current.y
-                    ),
-                    className: "stroke-lime-500 stroke-2",
-                  })}
+                    )}
+                    className="stroke-lime-500 stroke-2"
+                    id="0000-0000-0000-0000-0000"
+                  />
                 </Case>
               </Switch>
             </Case>
