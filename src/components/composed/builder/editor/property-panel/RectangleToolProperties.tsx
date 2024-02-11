@@ -6,8 +6,8 @@ function RectangleToolProperties() {
   return (
     <div className="w-full">
       <Fill />
-      {/* <Stroke /> */}
-      {/* <ZIndex /> */}
+      <Stroke />
+      <ZIndex />
     </div>
   )
 }
